@@ -1,12 +1,27 @@
+//TODO: should correctly default to a numerical input of 1 when no numerical
+
 function ConvertHandler() {
   this.getNum = function (input) {
-    let result = input.match(/\d+/g)[0];
+    let result;
+
+    if (input.split("").filter((e) => e === "/").length > 1)
+      throw Error("Invalid number");
+
+    let str = input.match(/\d+(\.\d+)?(\/\d+)?/g)[0];
+
+    if (str.length < 1) return 1;
+    if (str.includes("/")) {
+      const arr = str.split("/");
+
+      result = Number(arr[0]) / Number(arr[1]);
+    } else {
+      result = Number(str);
+    }
     return result;
   };
 
   this.getUnit = function (input) {
-    // TODO: should correctly read a fractional input with a decimal.
-    let result = input.match(/[^\d]+/g)[0];
+    let result = input.match(/[^\d\/.,\s]+/g)[0];
     return result;
   };
 
@@ -42,15 +57,16 @@ function ConvertHandler() {
     const miToKm = 1.60934;
 
     const conversionMap = {
-      gal: galToL,
-      lbs: lbsToKg,
-      mi: miToKm,
-      L: galToL,
-      kg: lbsToKg,
-      km: miToKm,
+      gal: initNum * galToL,
+      lbs: initNum * lbsToKg,
+      mi: initNum * miToKm,
+      L: initNum / galToL,
+      kg: initNum / lbsToKg,
+      km: initNum / miToKm,
     };
+    const converted = conversionMap[initUnits];
 
-    return conversionMap[initUnits] * initNum;
+    return Number(converted.toFixed(5));
   };
 
   this.getString = function (initNum, initUnit, returnNum, returnUnit) {
