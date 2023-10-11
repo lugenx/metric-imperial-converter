@@ -1,4 +1,4 @@
-//TODO: should correctly default to a numerical input of 1 when no numerical
+//TODO: test requirements: should correctly default to a numerical input of 1 when no numerical
 
 function ConvertHandler() {
   this.getNum = function (input) {
