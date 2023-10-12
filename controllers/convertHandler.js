@@ -1,21 +1,17 @@
-//TODO: test requirements: should correctly default to a numerical input of 1 when no numerical
-
 function ConvertHandler() {
   this.getNum = function (input) {
     let result;
-
+    console.log("----raw input-- ", input);
     if (input.split("").filter((e) => e === "/").length > 1)
       throw Error("Invalid number");
 
-    let str = input.match(/\d+(\.\d+)?(\/\d+)?/g)[0];
+    if (input.length < 1) return 1;
+    if (input.includes("/")) {
+      const arr = input.split("/");
 
-    if (str.length < 1) return 1;
-    if (str.includes("/")) {
-      const arr = str.split("/");
-
-      result = Number(arr[0]) / Number(arr[1]);
+      result = parseFloat(arr[0]) / parseFloat(arr[1]);
     } else {
-      result = Number(str);
+      result = parseFloat(input) || 1;
     }
     return result;
   };
