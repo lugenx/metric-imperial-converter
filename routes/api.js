@@ -15,7 +15,6 @@ module.exports = function (app) {
       const initUnit = convertHandler.getUnit(input);
       const returnNum = convertHandler.convert(initNum, initUnit);
       const returnUnit = convertHandler.getReturnUnit(initUnit);
-
       const string = convertHandler.getString(
         initNum,
         initUnit,

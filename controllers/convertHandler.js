@@ -1,7 +1,7 @@
 function ConvertHandler() {
   this.getNum = function (input) {
     let result;
-    console.log("----raw input-- ", input);
+
     if (input.split("").filter((e) => e === "/").length > 1)
       throw Error("Invalid number");
 
@@ -17,37 +17,41 @@ function ConvertHandler() {
   };
 
   this.getUnit = function (input) {
-    let result = input.match(/[^\d\/.,\s]+/g)[0];
-    return result;
+    let str = input.match(/[^\d\/.,\s]+/g)[0];
+    const lowerCaseUnit = str === "L" ? str : str.toLowerCase();
+    return lowerCaseUnit;
   };
 
   this.getReturnUnit = function (initUnit) {
+    const lowerCaseInitUnit = initUnit.toLowerCase();
     const returnUnitMap = {
       gal: "L",
       lbs: "kg",
       mi: "km",
-      L: "gal",
+      l: "gal",
       kg: "lbs",
       km: "mi",
     };
 
-    return returnUnitMap[initUnit];
+    return returnUnitMap[lowerCaseInitUnit];
   };
 
   this.spellOutUnit = function (unit) {
+    const lowerCaseUnit = unit.toLowerCase();
     const spellOutMap = {
       gal: "gallons",
       lbs: "pounds",
       mi: "miles",
-      L: "liters",
+      l: "liters",
       kg: "kilograms",
       km: "kilometers",
     };
 
-    return spellOutMap[unit];
+    return spellOutMap[lowerCaseUnit];
   };
 
-  this.convert = function (initNum, initUnits) {
+  this.convert = function (initNum, initUnit) {
+    const lowerCaseInitUnit = initUnit.toLowerCase();
     const galToL = 3.78541;
     const lbsToKg = 0.453592;
     const miToKm = 1.60934;
@@ -56,17 +60,19 @@ function ConvertHandler() {
       gal: initNum * galToL,
       lbs: initNum * lbsToKg,
       mi: initNum * miToKm,
-      L: initNum / galToL,
+      l: initNum / galToL,
       kg: initNum / lbsToKg,
       km: initNum / miToKm,
     };
-    const converted = conversionMap[initUnits];
+    const converted = conversionMap[lowerCaseInitUnit];
 
     return Number(converted.toFixed(5));
   };
 
   this.getString = function (initNum, initUnit, returnNum, returnUnit) {
-    const spelledOutInitUnit = this.spellOutUnit(initUnit);
+    const lowerCaseInitUnit =
+      initUnit === "L" ? initUnit : initUnit.toLowerCase();
+    const spelledOutInitUnit = this.spellOutUnit(lowerCaseInitUnit);
     const spelledOutReturnUnit = this.spellOutUnit(returnUnit);
     let result = `${initNum} ${spelledOutInitUnit} converts to ${returnNum} ${spelledOutReturnUnit}`;
 
