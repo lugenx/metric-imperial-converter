@@ -18,8 +18,16 @@ function ConvertHandler() {
 
   this.getUnit = function (input) {
     let str = input.match(/[^\d\/.,\s]+/g)[0];
-    const lowerCaseUnit = str === "L" ? str : str.toLowerCase();
-    return lowerCaseUnit;
+
+    let correctedStr;
+
+    if (str === "l" || str === "L") {
+      correctedStr = str.toUpperCase();
+    } else {
+      correctedStr = str.toLowerCase();
+    }
+
+    return correctedStr;
   };
 
   this.getReturnUnit = function (initUnit) {
