@@ -3,6 +3,7 @@ function ConvertHandler() {
     let result;
 
     if (input.split("").filter((e) => e === "/").length > 1)
+      // TODO: maybe handle this error also in this.convert function:
       throw Error("Invalid number");
 
     if (input.length < 1) return 1;
@@ -17,7 +18,7 @@ function ConvertHandler() {
   };
 
   this.getUnit = function (input) {
-    let str = input.match(/[^\d\/.,\s]+/g)[0];
+    let str = input.match(/[a-zA-Z]+$/)[0];
 
     let correctedStr;
 
@@ -59,7 +60,6 @@ function ConvertHandler() {
   };
 
   this.convert = function (initNum, initUnit) {
-    const lowerCaseInitUnit = initUnit.toLowerCase();
     const galToL = 3.78541;
     const lbsToKg = 0.453592;
     const miToKm = 1.60934;
@@ -68,11 +68,27 @@ function ConvertHandler() {
       gal: initNum * galToL,
       lbs: initNum * lbsToKg,
       mi: initNum * miToKm,
-      l: initNum / galToL,
+      L: initNum / galToL,
       kg: initNum / lbsToKg,
       km: initNum / miToKm,
     };
-    const converted = conversionMap[lowerCaseInitUnit];
+
+    const unitIsValid = Object.keys(conversionMap).includes(initUnit);
+    const numberIsValid = initNum > 0;
+
+    if (!numberIsValid && !unitIsValid) {
+      throw Error("invalid number and unit");
+    }
+
+    if (!numberIsValid) {
+      throw Error("invalid number");
+    }
+
+    if (!unitIsValid) {
+      throw Error("invalid unit");
+    }
+
+    const converted = conversionMap[initUnit];
 
     return Number(converted.toFixed(5));
   };
