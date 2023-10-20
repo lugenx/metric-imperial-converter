@@ -2,13 +2,14 @@ function ConvertHandler() {
   this.getNum = function (input) {
     let result;
 
-    if (input.split("").filter((e) => e === "/").length > 1)
-      // TODO: maybe handle this error also in this.convert function:
-      throw Error("Invalid number");
+    let nonUnitPart = input.match(/^(.*?)(?=[a-zA-Z]+$)/)[0];
 
-    if (input.length < 1) return 1;
-    if (input.includes("/")) {
-      const arr = input.split("/");
+    if (nonUnitPart.indexOf("/") !== nonUnitPart.lastIndexOf("/")) return false;
+    if (nonUnitPart.indexOf(".") !== nonUnitPart.lastIndexOf(".")) return false;
+
+    if (nonUnitPart.length < 1) return 1;
+    if (nonUnitPart.includes("/")) {
+      const arr = nonUnitPart.split("/");
 
       result = parseFloat(arr[0]) / parseFloat(arr[1]);
     } else {
@@ -73,8 +74,9 @@ function ConvertHandler() {
       km: initNum / miToKm,
     };
 
+    const numberIsValid = initNum;
+
     const unitIsValid = Object.keys(conversionMap).includes(initUnit);
-    const numberIsValid = initNum > 0;
 
     if (!numberIsValid && !unitIsValid) {
       throw Error("invalid number and unit");
