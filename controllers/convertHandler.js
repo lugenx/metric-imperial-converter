@@ -1,11 +1,33 @@
 function ConvertHandler() {
+  this.checkInput = function (input) {
+    let nonUnitPart = input.match(/^(.*?)(?=[a-zA-Z]+$)/)[0];
+
+    const VALID_UNITS = ["L", "l", "kg", , "km", , "gal", , "lbs", , "mi"];
+
+    const numberIsNotValid =
+      nonUnitPart.indexOf("/") !== nonUnitPart.lastIndexOf("/") ||
+      nonUnitPart.indexOf(".") !== nonUnitPart.lastIndexOf(".");
+
+    const unit = this.getUnit(input);
+    const unitIsValid = VALID_UNITS.includes(unit);
+
+    if (numberIsNotValid && !unitIsValid) {
+      throw Error("invalid number and unit");
+    }
+
+    if (numberIsNotValid) {
+      throw Error("invalid number");
+    }
+
+    if (!unitIsValid) {
+      throw Error("invalid unit");
+    }
+  };
+
   this.getNum = function (input) {
     let result;
 
     let nonUnitPart = input.match(/^(.*?)(?=[a-zA-Z]+$)/)[0];
-
-    if (nonUnitPart.indexOf("/") !== nonUnitPart.lastIndexOf("/")) return false;
-    if (nonUnitPart.indexOf(".") !== nonUnitPart.lastIndexOf(".")) return false;
 
     if (nonUnitPart.length < 1) return 1;
     if (nonUnitPart.includes("/")) {
@@ -73,22 +95,6 @@ function ConvertHandler() {
       kg: initNum / lbsToKg,
       km: initNum / miToKm,
     };
-
-    const numberIsValid = initNum;
-
-    const unitIsValid = Object.keys(conversionMap).includes(initUnit);
-
-    if (!numberIsValid && !unitIsValid) {
-      throw Error("invalid number and unit");
-    }
-
-    if (!numberIsValid) {
-      throw Error("invalid number");
-    }
-
-    if (!unitIsValid) {
-      throw Error("invalid unit");
-    }
 
     const converted = conversionMap[initUnit];
 

@@ -11,6 +11,7 @@ module.exports = function (app) {
     const input = req.query.input;
 
     try {
+      convertHandler.checkInput(input);
       const initNum = convertHandler.getNum(input);
       const initUnit = convertHandler.getUnit(input);
       const returnNum = convertHandler.convert(initNum, initUnit);
